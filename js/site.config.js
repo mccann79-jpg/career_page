@@ -1,71 +1,96 @@
-// Edit this file to update tabs, links, and labels.
-// - PDFs: type: "pdf", file: "assets/pdfs/your-file.pdf"
-// - Web links: type: "web", url: "https://..."
-// - Internal pages: type: "html", html: "<p>...</p>" (or link to /pages)
+/**
+ * site.config.js
+ * ──────────────
+ * Central configuration for the research portfolio.
+ * Edit this file to add/remove tabs, change personal info, etc.
+ */
 
-window.SITE_CONFIG = {
-  display_name: "Brendan McCann, CFA",
+const SITE_CONFIG = {
+  /* ── Identity ─────────────────────────────────── */
+  displayName: "Brendan McCann, CFA",
   subtitle: "Manager Research | Data & Analytics | Tool Building",
+  morningstarLink: "https://www.morningstar.com/", // replace with actual profile URL
 
-  // Put your Morningstar profile URL here (or leave blank to hide button)
-  morningstar_profile: "",
+  /* ── Resume / Cover Letter ────────────────────── */
+  resumePath: "assets/docs/resume.pdf",
+  coverPath: "assets/docs/cover-letter.pdf",
 
-  // Replace these files anytime (keep the same filenames)
-  resume_pdf: "assets/docs/resume.pdf",
-  cover_pdf: "assets/docs/cover-letter.pdf",
-
+  /* ── Research Tabs ────────────────────────────── */
+  // type: "pdf" | "web" | "html"
+  //   pdf  → loads in the PDF iframe viewer
+  //   web  → loads an external URL in an iframe (or shows "Open" fallback)
+  //   html → renders inline HTML content in the page
   tabs: [
     {
-      id: "newsletter-etf-bad",
+      id: "newsletter",
       label: "Newsletter Article — What Makes an ETF Bad?",
-      title: "Newsletter Article — What Makes an ETF Bad?",
-      desc: "Framework for spotting ETFs with hidden costs, weak structure, and poor outcomes.",
       type: "pdf",
-      file: "assets/pdfs/what-makes-an-etf-bad.pdf"
+      file: "assets/docs/newsletter-article-etf.pdf",
+      title: "Newsletter Article — What Makes an ETF Bad?",
+      meta: "Morningstar Manager Research · 2024",
     },
     {
-      id: "newsletter-watchlist",
+      id: "watchlist",
       label: "ETF Investor Newsletter Watchlist",
-      title: "ETF Investor Newsletter Watchlist",
-      desc: "Watchlist and themes—what to monitor and why it matters for investors.",
       type: "pdf",
-      file: "assets/pdfs/etf-investor-newsletter-watchlist.pdf"
+      file: "assets/docs/etf-investor-newsletter-watchlist.pdf",
+      title: "ETF Investor Newsletter Watchlist",
+      meta: "Morningstar Manager Research",
     },
-
-    // Web tabs
     {
       id: "web-article",
       label: "Web Article",
-      title: "Web Article",
-      desc: "Morningstar article on early leaders in the active ETF race and what’s driving results.",
       type: "web",
-      url: "https://www.morningstar.com/funds/big-winners-active-etf-race-so-far"
+      url: "https://www.morningstar.com/", // replace with actual article URL
+      title: "Web Article",
     },
     {
-      id: "media-citations",
+      id: "media",
       label: "Media Citations",
+      type: "html",
       title: "Media Citations",
-      desc: "CNBC piece on positioning for a pullback—defensives, quality, and portfolio considerations.",
-      type: "web",
-      url: "https://www.cnbc.com/2025/10/07/sp-500-where-to-invest-in-case-of-a-pullback.html"
+      html: `
+        <h2>Media Citations</h2>
+        <p>A selection of citations and references in financial media.</p>
+        <ul class="citations-list">
+          <li>
+            <strong>Example Publication</strong> — "Article Title Here"
+            <span class="cite-date">Jan 2024</span>
+          </li>
+        </ul>
+        <p class="muted">Add your media citations to <code>site.config.js</code>.</p>
+      `,
     },
-
-    // Optional placeholders (edit or remove)
     {
       id: "tools",
       label: "Tools",
+      type: "html",
       title: "Tools",
-      desc: "Brief notes on tools and dashboards I've built to support research workflows.",
-      type: "page",
-      page: "pages/tools.html"
+      html: `
+        <h2>Tools &amp; Projects</h2>
+        <p>Internal and public tools built for research workflows.</p>
+        <ul class="tools-list">
+          <li>
+            <strong>Tool Name</strong> — Brief description of the tool.
+            <a href="#" target="_blank" rel="noreferrer">View →</a>
+          </li>
+        </ul>
+        <p class="muted">Add your tools to <code>site.config.js</code>.</p>
+      `,
     },
     {
       id: "notes",
       label: "Notes",
+      type: "html",
       title: "Notes",
-      desc: "Short notes and observations from ongoing research and market themes.",
-      type: "page",
-      page: "pages/notes.html"
-    }
-  ]
+      html: `
+        <h2>Research Notes</h2>
+        <p>Working notes, frameworks, and observations.</p>
+        <p class="muted">Add your notes content to <code>site.config.js</code>.</p>
+      `,
+    },
+  ],
+
+  /* ── Default active tab (index into tabs[]) ───── */
+  defaultTab: 0,
 };

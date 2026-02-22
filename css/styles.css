@@ -1,0 +1,436 @@
+/* ================================================================
+   styles.css — Research Portfolio
+   ================================================================ */
+
+/* ── Reset & Base ─────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Palette */
+  --bg: #f5f5f4;
+  --surface: #ffffff;
+  --border: #e2e0dc;
+  --border-light: #ebe9e6;
+  --text: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --text-muted: #999;
+  --accent: #2c3e50;
+  --accent-dark: #1a2a3a;
+  --accent-text: #ffffff;
+  --tab-active-bg: var(--accent);
+  --tab-active-text: #fff;
+  --tab-bg: var(--surface);
+  --tab-text: var(--text);
+
+  /* Typography */
+  --font-body: "Source Sans 3", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+
+  /* Spacing */
+  --container-max: 1120px;
+  --radius: 8px;
+  --radius-sm: 5px;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ── Container ────────────────────────────────── */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ================================================================
+   TOPBAR
+   ================================================================ */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-inner {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+/* ── Identity (left) ──────────────────────────── */
+.identity {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.headshot {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-light);
+}
+
+.nameblock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.subline {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.undername-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ── Right rail ───────────────────────────────── */
+.rightrail {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rail-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ── Tabs ──────────────────────────────────────── */
+.tabs-inline {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin-bottom: -1px; /* overlap border */
+}
+
+.tabs-inline::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs-inner {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: var(--tab-bg);
+  color: var(--tab-text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.tab-btn:hover {
+  background: #f0efed;
+}
+
+.tab-btn.active {
+  background: var(--tab-active-bg);
+  color: var(--tab-active-text);
+  border-color: var(--tab-active-bg);
+}
+
+/* ── Buttons ──────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: #f0efed;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+.btn.primary:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+.btn.compact {
+  padding: 5px 10px;
+  font-size: 0.78rem;
+}
+
+.btn.icon svg {
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   MAIN CONTENT
+   ================================================================ */
+.main {
+  padding: 28px 0 60px;
+}
+
+/* ── Viewer Card ──────────────────────────────── */
+.viewer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.viewer-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.viewer-head-left {
+  min-width: 0;
+}
+
+.viewer-title {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.viewer-meta {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.viewer-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* ── PDF Frame ────────────────────────────────── */
+.pdf-frame {
+  width: 100%;
+  height: 75vh;
+  min-height: 500px;
+  border: none;
+  display: block;
+  background: var(--bg);
+}
+
+/* ── Web Frame ────────────────────────────────── */
+.web-frame {
+  width: 100%;
+  height: 75vh;
+  min-height: 500px;
+  border: none;
+  display: block;
+  background: var(--bg);
+}
+
+/* ── HTML Panel ───────────────────────────────── */
+.page {
+  padding: 28px 22px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.page h2 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.page p {
+  margin-bottom: 12px;
+}
+
+.page ul {
+  list-style: none;
+  padding: 0;
+}
+
+.page li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.page li:last-child {
+  border-bottom: none;
+}
+
+.page .muted {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.page code {
+  font-size: 0.85em;
+  background: #f0efed;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.cite-date {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+.citations-list li,
+.tools-list li {
+  line-height: 1.55;
+}
+
+.tools-list a {
+  color: var(--accent);
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+.tools-list a:hover {
+  text-decoration: underline;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 840px) {
+  .topbar-inner {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .rightrail {
+    width: 100%;
+  }
+
+  .rail-top {
+    flex-wrap: wrap;
+  }
+
+  .tabs-inner {
+    flex-wrap: nowrap;
+  }
+
+  .pdf-frame,
+  .web-frame {
+    height: 60vh;
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 540px) {
+  .identity {
+    gap: 12px;
+  }
+
+  .headshot {
+    width: 56px;
+    height: 56px;
+  }
+
+  .name {
+    font-size: 1.05rem;
+  }
+
+  .page-title {
+    font-size: 1.1rem;
+  }
+
+  .viewer-head {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .viewer-actions {
+    flex-wrap: wrap;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+}
