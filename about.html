@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
-  <title>About</title>
+    <title>About</title>
   <link rel="icon" href="assets/img/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="stylesheet" href="css/styles.css" />
@@ -28,76 +27,22 @@
         <a href="docs.html">Resume &amp; Letters</a>
         <a href="about.html">About</a>
       </nav>
-      <select id="themeSelect" class="theme-select" aria-label="Theme">
-        <option value="system">System</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </div>
+</div>
     </div>
   </div>
   
+
 <div class="container">
-  <div class="grid">
-    <aside class="card">
-      <div class="pad">
-        <div class="profile">
-          <div class="avatar"><img src="assets/img/headshot.jpeg" alt="Headshot"/></div>
-          <div class="meta">
-            <div class="role">About</div>
-            <div class="line" id="location">Chicago, IL</div>
-            <div class="line"><a id="emailLink" href="#">email</a></div>
-          </div>
-        </div>
-
-        <hr class="sep"/>
-        <div class="notice">
-          Put a short, recruiter-friendly summary here—2–4 bullets, keywords, and what roles you’re targeting.
-        </div>
-
-        <div class="btnrow">
-          <a class="btn primary" href="docs.html">Resume</a>
-          <a class="btn" href="index.html">Research</a>
-        </div>
-      </div>
-    </aside>
-
-    <main class="card">
-      <div class="pad">
-        <h1 style="margin:0 0 10px; font-size:22px">Bio</h1>
-        <div class="notice">
-          <ul style="margin:10px 0 0; padding-left:18px; color:var(--muted); line-height:1.6">
-            <li><b>What I do:</b> [ETF / manager research / data]</li>
-            <li><b>Strengths:</b> [writing, quantitative work, screening, storytelling]</li>
-            <li><b>Tools:</b> [Python, Excel, Morningstar Direct, etc.]</li>
-            <li><b>Looking for:</b> [roles + location preference]</li>
-          </ul>
-        </div>
-
-        <hr class="sep"/>
-
-        <h2 style="margin:0 0 10px; font-size:18px">Highlights</h2>
-        <div class="notice">
-          Add a few “proof points” here: published pieces, dashboards, projects, awards, CFA progress, etc.
-        </div>
-
-        <hr class="sep"/>
-
-        <h2 style="margin:0 0 10px; font-size:18px">Contact</h2>
-        <div class="notice">
-          Email: <a id="emailLink2" href="#" style="color:var(--text)"></a><br/>
-          LinkedIn / GitHub via top nav.
-        </div>
-        <script>
-          document.addEventListener('DOMContentLoaded', () => {
-            const e = (window.SITE_CONFIG && window.SITE_CONFIG.email) ? window.SITE_CONFIG.email : '';
-            const a = document.getElementById('emailLink2');
-            if(a){ a.textContent = e; a.href = e ? 'mailto:' + e : '#'; }
-          });
-        </script>
-      </div>
-    </main>
-  </div>
+  <main class="card">
+    <div class="pad">
+      <h1 class="page-title">About</h1>
+      <ul class="bullets" id="aboutBullets">
+        <li>Investment research focused on ETFs, flows, and portfolio construction.</li>
+        <li>Data-driven writing with Python/Excel workflows.</li>
+        <li><a id="linkedinLink2" href="#" target="_blank" rel="noopener">LinkedIn</a> • <a id="githubLink2" href="#" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </main>
 </div>
 
 </body>

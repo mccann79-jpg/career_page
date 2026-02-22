@@ -1,5 +1,5 @@
 :root{
-  /* LIGHT (default). Dark mode is applied via prefers-color-scheme or manual override. */
+  /* Light theme (fixed). */
   --bg:#f7f8fb;
   --panel:#ffffff;
   --panel2:#f3f5f9;
@@ -17,53 +17,16 @@
 }
 
 /* AUTO: follow OS theme */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0b0f14;
-    --panel:#0f1620;
-    --panel2:#111a25;
-    --text:#e7edf5;
-    --muted:#a8b3c3;
-    --border: rgba(255,255,255,.08);
-    --accent:#b08d57;
-    --accent2:#6f8fae;
-    --shadow: 0 12px 30px rgba(0,0,0,.45);
-    --topbar-bg: rgba(11,15,20,.72);
-  }
 }
 
 /* MANUAL OVERRIDE: user selection */
-html[data-theme="light"]{
-  --bg:#f7f8fb;
-  --panel:#ffffff;
-  --panel2:#f3f5f9;
-  --text:#0f172a;
-  --muted:#475569;
-  --border: rgba(15,23,42,.10);
-  --accent:#9a6a33;
-  --accent2:#3b6f8f;
-  --shadow: 0 12px 30px rgba(2,6,23,.10);
-  --topbar-bg: rgba(247,248,251,.75);
-}
 
-html[data-theme="dark"]{
-  --bg:#0b0f14;
-  --panel:#0f1620;
-  --panel2:#111a25;
-  --text:#e7edf5;
-  --muted:#a8b3c3;
-  --border: rgba(255,255,255,.08);
-  --accent:#b08d57;
-  --accent2:#6f8fae;
-  --shadow: 0 12px 30px rgba(0,0,0,.45);
-  --topbar-bg: rgba(11,15,20,.72);
-}
 
 html{ color-scheme: light dark; }
 
 
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:100% font-size:18px; line-height:1.55;}
 body{
   margin:0;
   font-family:var(--sans);
@@ -88,15 +51,15 @@ a:hover{opacity:.9}
 .brand{
   display:flex; flex-direction:column; gap:2px;
 }
-.brand .name{font-weight:700; letter-spacing:.2px}
-.brand .sub{color:var(--muted); font-size:13px}
+.brand .name{font-weight:750; letter-spacing:.2px; font-size:18px}
+.brand .sub{color:var(--muted); font-size:14px}
 .nav{
   display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
 }
 .nav a{
   padding:10px 12px; border:1px solid transparent; border-radius:999px;
   color:var(--muted); font-size:14px;
-}
+ font-size:16px;}
 .nav a.active, .nav a:hover{
   border-color:var(--border);
   background: rgba(255,255,255,.04);
@@ -217,18 +180,21 @@ code.inline{
 
 .right{display:flex; align-items:center; gap:10px;}
 
-.theme-select{
-  appearance:none;
-  background: var(--panel2);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 10px 34px 10px 12px;
-  font-size: 14px;
-  line-height: 1;
-  box-shadow: none;
-}
 .theme-select:focus{ outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
 @supports not (color-mix(in srgb, red 50%, transparent)){
   .theme-select:focus{ outline: 2px solid rgba(154,106,51,.35); outline-offset: 2px; }
 }
+
+/* Minimal list rows */
+.list{display:flex; flex-direction:column; gap:12px}
+.item{display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--panel)}
+.item-left{min-width:0}
+.item-title{
+  font-weight:650;
+  text-decoration:none;
+  color:var(--text);
+  font-size:18px;
+}
+.item-title:hover{color:var(--accent); text-decoration:underline}
+.item-right{display:flex; align-items:center; gap:10px}
+.page-title{margin:0 0 14px 0; font-size:24px; letter-spacing:.2px}
