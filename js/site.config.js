@@ -1,6 +1,6 @@
 window.SITE_CONFIG = {
   "name": "Brendan McCann",
-  "title": "Investment Research | ETFs \u2022 Manager Research \u2022 Data",
+  "title": "Manager Research | Data & Analytics | Tool Building",
   "location": "Chicago, IL",
   "email": "brendan.mccann@morningstar.com",
   "linkedin": "https://www.linkedin.com/",
@@ -19,19 +19,30 @@ window.SITE_CONFIG = {
     {
       "id": "what-makes-an-etf-bad",
       "title": "What Makes an ETF Bad?",
-      "type": "Article (PDF)",
-      "date": "June 2025",
-      "summary": "A practical checklist of ETF red flags\u2014fees, turnover, and concentration\u2014and why they matter for investor outcomes.",
-      "file": "assets/pdfs/what-makes-an-etf-bad.pdf"
+      "file": "assets/pdfs/what-makes-an-etf-bad.pdf",
+      "tab_label": "Newsletter Article: What Makes an ETF Bad?"
     },
     {
       "id": "etf-investor-watchlist",
-      "title": "ETFInvestor Newsletter Watchlist",
-      "type": "Watchlist (PDF)",
-      "date": "Nov 2025 (data through Nov. 30, 2025)",
-      "summary": "A watchlist-style reference with ratings, performance, risk, and portfolio statistics across equity and fixed-income ETFs.",
-      "file": "assets/pdfs/etf-investor-newsletter-watchlist.pdf"
+      "title": "ETF Investor Newsletter Watchlist",
+      "file": "assets/pdfs/etf-investor-newsletter-watchlist.pdf",
+      "tab_label": "Newsletter Watchlist"
     }
   ],
-  "morningstar_profile": ""
+  "morningstar_profile": "",
+  "avatar": "assets/img/headshot.jpeg",
+  "extra_tabs": [
+    {
+      "label": "Tools",
+      "href": "pages/tools.html"
+    },
+    {
+      "label": "Notes",
+      "href": "pages/notes.html"
+    },
+    {
+      "label": "Resume & Letters",
+      "href": "docs.html"
+    }
+  ]
 };

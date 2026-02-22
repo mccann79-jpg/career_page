@@ -198,3 +198,55 @@ code.inline{
 .item-title:hover{color:var(--accent); text-decoration:underline}
 .item-right{display:flex; align-items:center; gap:10px}
 .page-title{margin:0 0 14px 0; font-size:24px; letter-spacing:.2px}
+
+
+/* --- Clean, glanceable header tabs --- */
+body{ font-size:18px; }
+.brand-name{ font-size:20px; font-weight:700; }
+.brand-sub{ font-size:14px; }
+.wrap{ padding-top: 24px; }
+
+.tabsbar{ border-top: 1px solid var(--border); background: var(--panel); }
+.tabs{ display:flex; gap:10px; align-items:center; padding:10px 0; overflow-x:auto; }
+.tab{
+  display:inline-flex;
+  align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background: var(--panel2);
+  color: var(--text);
+  text-decoration:none;
+  white-space:nowrap;
+  font-weight:600;
+  font-size:14px;
+}
+.tab:hover{ background: #eef1f6; }
+.tab.active{
+  background: var(--panel);
+  border-color: rgba(154,106,51,.35);
+  box-shadow: 0 6px 16px rgba(2,6,23,.06);
+}
+
+.viewer-title{ font-size:24px; font-weight:800; }
+.viewer-actions .btn{ font-size:14px; padding:10px 12px; }
+
+.docslist{ display:flex; flex-direction:column; gap:12px; }
+.docrow{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px 16px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background: var(--panel);
+}
+.docleft{ font-weight:700; }
+.docright{ display:flex; gap:10px; }
+
+.panel .h1{ margin:0 0 10px; font-size:22px; }
+.muted{ color: var(--muted); font-size:14px; }
+
+@media (max-width: 700px){
+  body{ font-size:17px; }
+  .brand-sub{ display:none; }
+  .viewer-title{ font-size:20px; }
+}

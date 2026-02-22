@@ -2,11 +2,11 @@
   const cfg = window.SITE_CONFIG || {};
   const $ = (sel, root=document)=>root.querySelector(sel);
 
-  function safeSetText(id, value){
+  function setText(id, value){
     const el = document.getElementById(id);
-    if(el && value) el.textContent = value;
+    if(el) el.textContent = value || '';
   }
-  function safeSetHref(id, href){
+  function setHref(id, href){
     const el = document.getElementById(id);
     if(!el) return;
     if(href){
@@ -18,53 +18,62 @@
   }
 
   function initHeader(){
-    safeSetText('name', cfg.name || 'Research Portfolio');
-    safeSetText('titleLine', cfg.title || '');
-    safeSetHref('msLink', cfg.morningstar_profile || '');
+    setText('name', cfg.name || 'Research Portfolio');
+    setText('titleLine', cfg.title || '');
+    setHref('msLink', cfg.morningstar_profile || '');
 
     const avatar = document.getElementById('avatar');
-    if(avatar && cfg.avatar){
-      avatar.src = cfg.avatar;
+    if(avatar){
+      avatar.src = cfg.avatar || 'assets/img/headshot.jpeg';
+      avatar.alt = (cfg.name || 'Headshot');
     }
 
-    safeSetHref('linkedinLink2', cfg.linkedin || '');
-    safeSetHref('githubLink2', cfg.github || '');
+    // Resume download button
+    const resumeBtn = document.getElementById('resumeBtn');
+    if(resumeBtn){
+      // find resume doc
+      const resume = (cfg.docs || []).find(d => (d.label || '').toLowerCase().includes('resume')) || (cfg.docs||[])[0];
+      if(resume && resume.file){
+        resumeBtn.href = resume.file;
+        resumeBtn.style.display = '';
+      }else{
+        resumeBtn.style.display = 'none';
+      }
+    }
+
+    buildTabs();
   }
 
-  function buildListItem(item){
-    const { title, file } = item;
-    const wrap = document.createElement('div');
-    wrap.className = 'item';
-
-    const left = document.createElement('div');
-    left.className = 'item-left';
-
-    const a = document.createElement('a');
-    a.className = 'item-title';
-    a.textContent = title;
-    a.href = `pages/viewer.html?file=${encodeURIComponent(file)}&title=${encodeURIComponent(title)}`;
-    left.appendChild(a);
-
-    const right = document.createElement('div');
-    right.className = 'item-right';
-
-    const dl = document.createElement('a');
-    dl.className = 'btn';
-    dl.href = file;
-    dl.setAttribute('download','');
-    dl.textContent = 'Download';
-    right.appendChild(dl);
-
-    wrap.appendChild(left);
-    wrap.appendChild(right);
-    return wrap;
-  }
-
-  function renderList(hostId, items){
-    const host = document.getElementById(hostId);
+  function buildTabs(){
+    const host = document.getElementById('tabs');
     if(!host) return;
-    (items || []).filter(x => x && x.title && x.file)
-      .forEach(item => host.appendChild(buildListItem(item)));
+    host.innerHTML = '';
+
+    const currentDoc = new URLSearchParams(location.search).get('doc') || '';
+
+    const makeTab = (label, href, active=false)=>{
+      const a = document.createElement('a');
+      a.className = 'tab' + (active ? ' active' : '');
+      a.href = href;
+      a.textContent = label;
+      return a;
+    };
+
+    (cfg.research || []).forEach(r => {
+      if(!r || !r.id) return;
+      const label = r.tab_label || r.title || 'Research';
+      const href = `index.html?doc=${encodeURIComponent(r.id)}`;
+      host.appendChild(makeTab(label, href, r.id === currentDoc || (!currentDoc && (cfg.research||[])[0]?.id===r.id)));
+    });
+
+    (cfg.extra_tabs || []).forEach(t=>{
+      if(!t || !t.href) return;
+      host.appendChild(makeTab(t.label || 'More', t.href, false));
+    });
+  }
+
+  function getDocById(id){
+    return (cfg.research || []).find(r => r.id === id);
   }
 
   function initViewer(){
@@ -72,29 +81,73 @@
     if(!frame) return;
 
     const qs = new URLSearchParams(location.search);
-    const file = qs.get('file') || '';
-    const title = qs.get('title') || 'Document';
+    const docId = qs.get('doc') || '';
+    let doc = docId ? getDocById(docId) : null;
+    if(!doc){
+      doc = (cfg.research || [])[0] || null;
+    }
+    if(!doc) return;
 
+    // title
     const titleEl = document.getElementById('docTitle');
-    if(titleEl) titleEl.textContent = title;
+    if(titleEl) titleEl.textContent = doc.title || 'Document';
 
-    const resolved = file.startsWith('/') ? file : `../${file}`;
-    frame.src = resolved;
+    // iframe src
+    const file = doc.file;
+    frame.src = file;
 
+    // open + download buttons
     const openBtn = document.getElementById('openBtn');
-    if(openBtn) openBtn.href = resolved;
-
-    const dlBtn = document.getElementById('downloadBtn');
+    const dlBtn = document.getElementById('dlBtn');
+    if(openBtn) openBtn.href = file;
     if(dlBtn){
-      dlBtn.href = resolved;
+      dlBtn.href = file;
       dlBtn.setAttribute('download','');
     }
+
+    // set active tab
+    buildTabs();
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
+  function initDocs(){
+    const host = document.getElementById('docsList');
+    if(!host) return;
+    host.innerHTML = '';
+
+    (cfg.docs || []).filter(d => d && d.label && d.file).forEach(d=>{
+      const row = document.createElement('div');
+      row.className = 'docrow';
+
+      const left = document.createElement('div');
+      left.className = 'docleft';
+      left.textContent = d.label;
+
+      const right = document.createElement('div');
+      right.className = 'docright';
+
+      const view = document.createElement('a');
+      view.className = 'btn';
+      view.href = `pages/doc-viewer.html?file=${encodeURIComponent(d.file)}&title=${encodeURIComponent(d.label)}`;
+      view.textContent = 'View';
+
+      const dl = document.createElement('a');
+      dl.className = 'btn btn-primary';
+      dl.href = d.file;
+      dl.setAttribute('download','');
+      dl.textContent = 'Download';
+
+      right.appendChild(view);
+      right.appendChild(dl);
+
+      row.appendChild(left);
+      row.appendChild(right);
+      host.appendChild(row);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
     initHeader();
-    renderList('researchList', cfg.research);
-    renderList('docsList', cfg.docs);
     initViewer();
+    initDocs();
   });
 })();
