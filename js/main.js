@@ -1,153 +1,119 @@
 (function(){
-  const cfg = window.SITE_CONFIG || {};
-  const $ = (sel, root=document)=>root.querySelector(sel);
+  const cfg = window.SITE_CONFIG;
+  const baseHref = document.querySelector('base')?.getAttribute('href') || './';
 
-  function setText(id, value){
-    const el = document.getElementById(id);
-    if(el) el.textContent = value || '';
-  }
-  function setHref(id, href){
-    const el = document.getElementById(id);
-    if(!el) return;
-    if(href){
-      el.href = href;
-      el.style.display = '';
-    }else{
-      el.style.display = 'none';
-    }
+  const $ = (sel)=>document.querySelector(sel);
+
+  function safeUrl(path){
+    // With <base href="/career_page/">, relative paths resolve correctly.
+    // This helper just returns the path as-is, but keeps a single place to adjust if needed.
+    return path;
   }
 
-  function initHeader(){
-    setText('name', cfg.name || 'Research Portfolio');
-    setText('titleLine', cfg.title || '');
-    setHref('msLink', cfg.morningstar_profile || '');
+  function setHeader(){
+    $('#displayName').textContent = cfg.display_name || '';
+    $('#subtitle').textContent = cfg.subtitle || '';
 
-    const avatar = document.getElementById('avatar');
-    if(avatar){
-      avatar.src = cfg.avatar || 'assets/img/headshot.jpeg';
-      avatar.alt = (cfg.name || 'Headshot');
+    const ms = $('#morningstarLink');
+    if(cfg.morningstar_profile && !cfg.morningstar_profile.includes('PASTE_YOUR')){
+      ms.href = cfg.morningstar_profile;
+      ms.style.display = 'inline-flex';
+    } else {
+      ms.style.display = 'none';
     }
 
-    // Resume download button
-    const resumeBtn = document.getElementById('resumeBtn');
-    if(resumeBtn){
-      // find resume doc
-      const resume = (cfg.docs || []).find(d => (d.label || '').toLowerCase().includes('resume')) || (cfg.docs||[])[0];
-      if(resume && resume.file){
-        resumeBtn.href = resume.file;
-        resumeBtn.style.display = '';
-      }else{
-        resumeBtn.style.display = 'none';
-      }
-    }
-
-    buildTabs();
+    const resumeBtn = $('#resumeDownload');
+    resumeBtn.href = safeUrl(cfg.resume_pdf || 'assets/docs/resume.pdf');
   }
 
   function buildTabs(){
-    const host = document.getElementById('tabs');
-    if(!host) return;
-    host.innerHTML = '';
-
-    const currentDoc = new URLSearchParams(location.search).get('doc') || '';
-
-    const makeTab = (label, href, active=false)=>{
-      const a = document.createElement('a');
-      a.className = 'tab' + (active ? ' active' : '');
-      a.href = href;
-      a.textContent = label;
-      return a;
-    };
-
-    (cfg.research || []).forEach(r => {
-      if(!r || !r.id) return;
-      const label = r.tab_label || r.title || 'Research';
-      const href = `index.html?doc=${encodeURIComponent(r.id)}`;
-      host.appendChild(makeTab(label, href, r.id === currentDoc || (!currentDoc && (cfg.research||[])[0]?.id===r.id)));
-    });
-
-    (cfg.extra_tabs || []).forEach(t=>{
-      if(!t || !t.href) return;
-      host.appendChild(makeTab(t.label || 'More', t.href, false));
+    const wrap = $('#tabs');
+    wrap.innerHTML = '';
+    cfg.tabs.forEach(tab=>{
+      const b = document.createElement('button');
+      b.className = 'tab';
+      b.type = 'button';
+      b.dataset.tabId = tab.id;
+      b.textContent = tab.label;
+      b.addEventListener('click', ()=>activateTab(tab.id, true));
+      wrap.appendChild(b);
     });
   }
 
-  function getDocById(id){
-    return (cfg.research || []).find(r => r.id === id);
+  function setActiveButton(tabId){
+    document.querySelectorAll('.tab').forEach(el=>{
+      el.classList.toggle('active', el.dataset.tabId === tabId);
+    });
   }
 
-  function initViewer(){
-    const frame = document.getElementById('pdfFrame');
-    if(!frame) return;
+  function activateTab(tabId, push){
+    const tab = cfg.tabs.find(t=>t.id===tabId) || cfg.tabs[0];
+    if(!tab) return;
 
-    const qs = new URLSearchParams(location.search);
-    const docId = qs.get('doc') || '';
-    let doc = docId ? getDocById(docId) : null;
-    if(!doc){
-      doc = (cfg.research || [])[0] || null;
+    setActiveButton(tab.id);
+
+    $('#viewerTitle').textContent = tab.title || tab.label || '';
+    const meta = $('#viewerMeta');
+    meta.textContent = tab.type === 'pdf' ? 'PDF' : '';
+    meta.style.display = tab.type === 'pdf' ? 'block' : 'none';
+
+    const iframe = $('#pdfFrame');
+    const page = $('#pageContainer');
+
+    const openNew = $('#openNewTab');
+    const download = $('#downloadBtn');
+
+    if(tab.type === 'pdf'){
+      const file = safeUrl(tab.file);
+      iframe.src = file;
+      iframe.style.display = 'block';
+      page.style.display = 'none';
+
+      openNew.href = file;
+      download.href = file;
+
+      openNew.style.display = 'inline-flex';
+      download.style.display = 'inline-flex';
+    } else {
+      iframe.removeAttribute('src');
+      iframe.style.display = 'none';
+      page.style.display = 'block';
+
+      openNew.style.display = 'none';
+      download.style.display = 'none';
+
+      fetch(safeUrl(tab.file))
+        .then(r=>r.text())
+        .then(html=>{
+          page.innerHTML = html;
+        })
+        .catch(()=>{
+          page.innerHTML = '<div class="page"><h2>Content not found</h2><p>Make sure the file exists.</p></div>';
+        });
     }
-    if(!doc) return;
 
-    // title
-    const titleEl = document.getElementById('docTitle');
-    if(titleEl) titleEl.textContent = doc.title || 'Document';
-
-    // iframe src
-    const file = doc.file;
-    frame.src = file;
-
-    // open + download buttons
-    const openBtn = document.getElementById('openBtn');
-    const dlBtn = document.getElementById('dlBtn');
-    if(openBtn) openBtn.href = file;
-    if(dlBtn){
-      dlBtn.href = file;
-      dlBtn.setAttribute('download','');
+    if(push){
+      const url = new URL(window.location.href);
+      url.hash = `tab=${encodeURIComponent(tab.id)}`;
+      history.pushState({tab: tab.id}, '', url.toString());
     }
-
-    // set active tab
-    buildTabs();
   }
 
-  function initDocs(){
-    const host = document.getElementById('docsList');
-    if(!host) return;
-    host.innerHTML = '';
-
-    (cfg.docs || []).filter(d => d && d.label && d.file).forEach(d=>{
-      const row = document.createElement('div');
-      row.className = 'docrow';
-
-      const left = document.createElement('div');
-      left.className = 'docleft';
-      left.textContent = d.label;
-
-      const right = document.createElement('div');
-      right.className = 'docright';
-
-      const view = document.createElement('a');
-      view.className = 'btn';
-      view.href = `pages/doc-viewer.html?file=${encodeURIComponent(d.file)}&title=${encodeURIComponent(d.label)}`;
-      view.textContent = 'View';
-
-      const dl = document.createElement('a');
-      dl.className = 'btn btn-primary';
-      dl.href = d.file;
-      dl.setAttribute('download','');
-      dl.textContent = 'Download';
-
-      right.appendChild(view);
-      right.appendChild(dl);
-
-      row.appendChild(left);
-      row.appendChild(right);
-      host.appendChild(row);
-    });
+  function initialTab(){
+    const hash = window.location.hash || '';
+    const m = hash.match(/tab=([^&]+)/);
+    const tabId = m ? decodeURIComponent(m[1]) : null;
+    if(tabId && cfg.tabs.some(t=>t.id===tabId)) return tabId;
+    return cfg.tabs[0]?.id;
   }
 
-  document.addEventListener('DOMContentLoaded', ()=>{
-    initHeader();
-    initViewer();
-    initDocs();
+  window.addEventListener('popstate', (e)=>{
+    const tabId = (e.state && e.state.tab) ? e.state.tab : initialTab();
+    activateTab(tabId, false);
   });
+
+  // init
+  setHeader();
+  buildTabs();
+  activateTab(initialTab(), false);
 })();
