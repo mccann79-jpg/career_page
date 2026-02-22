@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viewer</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script src="../js/site.config.js"></script>
+  <script defer src="../js/main.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="name" id="name">Brendan McCann</div>
+        <div class="sub" id="titleLine">Investment Research</div>
+      </div>
+      <nav class="nav">
+        <a href="../index.html">Research</a>
+        <a href="../docs.html">Resume &amp; Letters</a>
+        <a href="../about.html">About</a>
+      </nav>
+    </div>
+  </div>
+  
+<div class="container">
+  <div class="card">
+    <div class="pad">
+      <div class="section-head">
+        <div>
+          <h1 id="docTitle">Document</h1>
+          <p id="docMeta" class="muted">PDF</p>
+        </div>
+        <div class="btnrow" style="margin-top:0">
+          <a class="btn" href="../index.html">Back</a>
+          <a class="btn" id="openBtn" href="#" target="_blank" rel="noopener">Open in new tab</a>
+          <a class="btn primary" id="downloadBtn" href="#" download>Download</a>
+        </div>
+      </div>
+    </div>
+    <div class="viewer-wrap">
+      <iframe id="pdfFrame" class="viewer" title="PDF viewer"></iframe>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
