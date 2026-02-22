@@ -43,11 +43,14 @@ a:hover{text-decoration:underline}
   display:flex; align-items:center; gap:12px; min-width: 300px;
 }
 .headshot{
-  width:44px; height:44px; border-radius:12px;
+  width:60px; height:60px; border-radius:16px;
   object-fit:cover;
   border:1px solid var(--border);
 }
 .nameblock{line-height:1.1}
+.undername-actions{ margin-top:10px; }
+.undername-actions .btn{ padding:10px 14px; font-weight:600; }
+
 .name{
   font-size:20px; font-weight:700; letter-spacing:-0.02em;
 }
