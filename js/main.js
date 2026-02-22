@@ -3,6 +3,52 @@
   const $ = (sel, root=document)=>root.querySelector(sel);
   const $$ = (sel, root=document)=>Array.from(root.querySelectorAll(sel));
 
+
+  function applyTheme(mode){
+    const root = document.documentElement;
+    if(mode === 'light' || mode === 'dark'){
+      root.setAttribute('data-theme', mode);
+    }else{
+      root.removeAttribute('data-theme'); // system
+    }
+  }
+
+  function initTheme(){
+    const key = 'theme';
+    const saved = (localStorage.getItem(key) || 'system').toLowerCase();
+    const select = document.getElementById('themeSelect');
+    applyTheme(saved);
+    if(select){
+      select.value = (saved === 'light' || saved === 'dark') ? saved : 'system';
+      select.addEventListener('change', ()=>{
+        const v = (select.value || 'system').toLowerCase();
+        localStorage.setItem(key, v);
+        applyTheme(v);
+      });
+    }
+  }
+
+  initTheme();
+
+  function initBrand(){
+    const nameEl = document.getElementById('name');
+    const titleEl = document.getElementById('titleLine');
+    const msLink = document.getElementById('msLink');
+    if(nameEl && cfg.name) nameEl.textContent = cfg.name;
+    if(titleEl && cfg.title) titleEl.textContent = cfg.title;
+    if(msLink){
+      const url = (cfg.morningstar_profile || '').trim();
+      if(url){
+        msLink.href = url;
+      }else{
+        msLink.style.display = 'none';
+      }
+    }
+  }
+
+  initBrand();
+
+
   function setActiveNav(){
     const path = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     $$('.nav a').forEach(a=>{
@@ -20,21 +66,18 @@
     (cfg.research || []).forEach(item=>{
       const el = document.createElement('div');
       el.className='item';
-      const tags = (item.tags || []).map(t=>`<span class="tag">${safeText(t)}</span>`).join('');
       const viewHref = `pages/viewer.html?id=${encodeURIComponent(item.id)}`;
       const dlHref = item.file;
       el.innerHTML = `
         <div class="top">
           <div>
-            <div class="title">${safeText(item.title)}</div>
+            <a class="title titleLink" href="${viewHref}">${safeText(item.title)}</a>
             <div class="meta">${safeText(item.type)} • ${safeText(item.date)}</div>
           </div>
           <div class="kbd">PDF</div>
         </div>
         <div class="notice" style="margin-top:10px">${safeText(item.summary)}</div>
-        <div class="tags">${tags}</div>
         <div class="actions">
-          <a class="btn primary" href="${viewHref}">View</a>
           <a class="btn" href="${dlHref}" download>Download</a>
         </div>
       `;

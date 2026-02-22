@@ -22,13 +22,7 @@ window.SITE_CONFIG = {
       "type": "Article (PDF)",
       "date": "June 2025",
       "summary": "A practical checklist of ETF red flags\u2014fees, turnover, and concentration\u2014and why they matter for investor outcomes.",
-      "file": "assets/pdfs/what-makes-an-etf-bad.pdf",
-      "tags": [
-        "ETFs",
-        "Fees",
-        "Turnover",
-        "Portfolio construction"
-      ]
+      "file": "assets/pdfs/what-makes-an-etf-bad.pdf"
     },
     {
       "id": "etf-investor-watchlist",
@@ -36,13 +30,8 @@ window.SITE_CONFIG = {
       "type": "Watchlist (PDF)",
       "date": "Nov 2025 (data through Nov. 30, 2025)",
       "summary": "A watchlist-style reference with ratings, performance, risk, and portfolio statistics across equity and fixed-income ETFs.",
-      "file": "assets/pdfs/etf-investor-newsletter-watchlist.pdf",
-      "tags": [
-        "Watchlist",
-        "ETFs",
-        "Screening",
-        "Risk/Return"
-      ]
+      "file": "assets/pdfs/etf-investor-newsletter-watchlist.pdf"
     }
-  ]
+  ],
+  "morningstar_profile": ""
 };

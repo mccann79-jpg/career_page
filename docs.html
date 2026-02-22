@@ -3,7 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
   <title>Resume & Letters</title>
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="stylesheet" href="css/styles.css" />
   <script src="js/site.config.js"></script>
   <script defer src="js/main.js"></script>
@@ -12,14 +15,25 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <div class="name" id="name">Brendan McCann</div>
-        <div class="sub" id="titleLine">Investment Research</div>
+        <img class="avatar" id="avatar" src="assets/img/headshot.jpeg" alt="Headshot" />
+        <div class="brand-text">
+          <div class="name" id="name">Brendan McCann</div>
+          <div class="sub" id="titleLine">Investment Research</div>
+          <a class="ms-link" id="msLink" href="#" target="_blank" rel="noopener">Morningstar profile</a>
+        </div>
       </div>
+      <div class="right">
       <nav class="nav">
         <a href="index.html">Research</a>
         <a href="docs.html">Resume &amp; Letters</a>
         <a href="about.html">About</a>
       </nav>
+      <select id="themeSelect" class="theme-select" aria-label="Theme">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
     </div>
   </div>
   
