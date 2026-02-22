@@ -3,59 +3,119 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <base href="/career_page/">
-  <title>Brendan McCann — Research</title>
-  <link rel="icon" href="assets/img/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+  <!-- Auto base path: works on Live Server + GitHub Pages project site (/career_page/) -->
+  <script>
+    const isLocal = location.hostname === '127.0.0.1' || location.hostname === 'localhost';
+    document.write(`<base href="${isLocal ? '/' : '/career_page/'}">`);
+  </script>
+
+  <title>Selected Research — Brendan McCann</title>
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/img/favicon-512.png">
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="container">
       <div class="topbar-inner">
+        <!-- LEFT: identity -->
         <div class="identity">
           <img class="headshot" src="assets/img/headshot.jpeg" alt="Headshot" />
           <div class="nameblock">
             <div id="displayName" class="name"></div>
             <div id="subtitle" class="subline"></div>
             <div class="undername-actions">
-              <a id="resumeDownload" class="btn primary" href="assets/docs/resume.pdf" download>Download Resume</a>
+              <a id="resumeDownload" class="btn primary icon compact" href="assets/docs/resume.pdf" download>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12"></path>
+                  <path d="M7 10l5 5 5-5"></path>
+                  <path d="M5 21h14"></path>
+                </svg>
+                Resume
+              </a>
+              <a id="coverDownload" class="btn icon compact" href="assets/docs/cover-letter.pdf" download>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12"></path>
+                  <path d="M7 10l5 5 5-5"></path>
+                  <path d="M5 21h14"></path>
+                </svg>
+                Cover
+              </a>
             </div>
           </div>
         </div>
 
-        <div class="header-actions">
-          <a id="morningstarLink" class="btn icon" href="#" target="_blank" rel="noreferrer">
-            Morningstar Profile
-          </a>
-</div>
+        <!-- RIGHT: title + tabs + actions -->
+        <div class="rightrail">
+          <div class="rail-top">
+            <div class="page-title">Selected Research</div>
+            <a id="morningstarLink" class="btn icon compact" href="#" target="_blank" rel="noreferrer">
+              Morningstar Profile
+            </a>
+          </div>
+          <nav class="tabs-inline" aria-label="Selected research tabs">
+            <div class="tabs-inner" id="tabs"></div>
+          </nav>
+        </div>
       </div>
-
-      <nav class="tabs">
-        <div class="tabs-inner" id="tabs" aria-label="Research tabs"></div>
-      </nav>
     </div>
   </header>
 
   <main class="main">
     <div class="container">
-      <section class="viewer-card">
+
+      <!-- PDF viewer -->
+      <section id="pdfCard" class="viewer-card">
         <div class="viewer-head">
-          <div>
+          <div class="viewer-head-left">
             <h1 id="viewerTitle" class="viewer-title"></h1>
-            <div id="viewerMeta" class="viewer-meta">PDF</div>
+            <div id="viewerMeta" class="viewer-meta"></div>
           </div>
           <div class="viewer-actions">
-            <a id="openNewTab" class="btn" href="#" target="_blank" rel="noreferrer">Open in new tab</a>
-            <a id="downloadBtn" class="btn" href="#" download>Download</a>
+            <button id="zoomOut" class="btn compact" type="button" aria-label="Zoom out">−</button>
+            <button id="zoomIn" class="btn compact" type="button" aria-label="Zoom in">+</button>
+            <button id="fitWidth" class="btn compact" type="button">Fit</button>
+            <a id="openNewTab" class="btn compact" href="#" target="_blank" rel="noreferrer">Open</a>
+            <a id="downloadBtn" class="btn compact" href="#" download>Download</a>
           </div>
         </div>
 
-        <iframe id="pdfFrame" class="pdf-frame" title="Document viewer"></iframe>
-        <div id="pageContainer" style="display:none"></div>
+        <div id="pdfShell" class="pdf-shell">
+          <div id="pdfPages" class="pdf-pages"></div>
+        </div>
+
+        <div id="pdfError" class="page" style="display:none;"></div>
       </section>
+
+      <!-- Web viewer -->
+      <section id="webCard" class="viewer-card" style="display:none;">
+        <div class="viewer-head">
+          <div class="viewer-head-left">
+            <h1 id="webTitle" class="viewer-title"></h1>
+            <div class="viewer-meta">Web</div>
+          </div>
+          <div class="viewer-actions">
+            <a id="webOpenNewTab" class="btn compact" href="#" target="_blank" rel="noreferrer">Open</a>
+          </div>
+        </div>
+
+        <div id="webBlocked" class="page" style="display:none;">
+          <p>This site blocks embedded viewing. Use “Open”.</p>
+        </div>
+
+        <iframe id="webFrame" class="web-frame" title="Web page"></iframe>
+      </section>
+
+      <!-- HTML panel (optional internal pages) -->
+      <section id="htmlCard" class="viewer-card" style="display:none;">
+        <div class="page" id="htmlPanel"></div>
+      </section>
+
     </div>
   </main>
+
+  <!-- PDF.js (required for local + GitHub Pages) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js" integrity="sha512-QlZV4WAVBq4z3ezY2f+K4Tj+ZcO8Pq4S8vZ0qS6UkgQ2g3n8yQ9+IfQz7m0t5sKc5+g6q+GQ5kEm1hSahh5qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script src="js/site.config.js"></script>
   <script src="js/main.js"></script>
