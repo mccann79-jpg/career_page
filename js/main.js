@@ -2,17 +2,11 @@
   const cfg = window.SITE_CONFIG || {};
   const $ = (sel)=>document.querySelector(sel);
 
-  // PDF.js worker
-  if (window.pdfjsLib) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
-  }
-
+  // Native PDF embed state (works reliably on GitHub Pages + localhost)
   const state = {
     activeId: null,
-    pdfDoc: null,
-    scale: 1.15,
-    fitWidth: true
+    zoomPct: 125,      // default slightly zoomed-in
+    fit: true
   };
 
   function setHeader(){
@@ -74,85 +68,49 @@
     if (htmlCard) htmlCard.style.display = which === 'html' ? 'block' : 'none';
   }
 
-  function clearPdf(){
-    state.pdfDoc = null;
-    const pages = $('#pdfPages');
-    if (pages) pages.innerHTML = '';
-  }
-
   function setPdfError(msg){
     const err = $('#pdfError');
-    const shell = $('#pdfShell');
-    if (!err || !shell) return;
-    err.style.display = 'block';
-    shell.style.display = 'none';
-    err.innerHTML = `<p>${msg}</p>`;
+    const frame = $('#pdfFrame');
+    if (err) {
+      err.style.display = 'block';
+      err.innerHTML = `<p>${msg}</p>`;
+    }
+    if (frame) frame.style.display = 'none';
   }
 
   function clearPdfError(){
     const err = $('#pdfError');
-    const shell = $('#pdfShell');
-    if (!err || !shell) return;
-    err.style.display = 'none';
-    shell.style.display = 'block';
-    err.innerHTML = '';
+    const frame = $('#pdfFrame');
+    if (err) {
+      err.style.display = 'none';
+      err.innerHTML = '';
+    }
+    if (frame) frame.style.display = 'block';
   }
 
-  async function renderPdf(url){
-    clearPdf();
+  function buildPdfEmbedUrl(file){
+    // Chrome/Edge/Firefox generally support #zoom= and #page= anchors.
+    // Fit mode uses "page-width"; otherwise use percentage.
+    const zoom = state.fit ? 'page-width' : String(state.zoomPct);
+    return `${file}#page=1&zoom=${encodeURIComponent(zoom)}`;
+  }
+
+  function renderPdf(file){
     clearPdfError();
 
+    const title = $('#viewerTitle');
     const meta = $('#viewerMeta');
-    if (meta) meta.textContent = 'Loading…';
-
-    if (!window.pdfjsLib){
-      setPdfError('PDF engine failed to load. Refresh the page.');
+    const frame = $('#pdfFrame');
+    if (!frame) {
+      setPdfError('PDF viewer could not initialize.');
       return;
     }
 
-    try{
-      const loadingTask = pdfjsLib.getDocument({ url });
-      state.pdfDoc = await loadingTask.promise;
+    if (meta) meta.textContent = 'PDF';
+    frame.style.background = '#ffffff';
+    frame.src = buildPdfEmbedUrl(file);
 
-      // Fit width scale based on first page
-      if (state.fitWidth){
-        const first = await state.pdfDoc.getPage(1);
-        const vp1 = first.getViewport({ scale: 1 });
-        const pagesEl = $('#pdfPages');
-        const available = Math.max(320, (pagesEl?.clientWidth || 800) - 24);
-        const fitScale = available / vp1.width;
-        state.scale = Math.min(Math.max(fitScale, 1.0), 2.25); // slightly zoomed-in
-      }
-
-      if (meta) {
-        meta.textContent = `${state.pdfDoc.numPages} page${state.pdfDoc.numPages === 1 ? '' : 's'} • PDF`;
-      }
-
-      const pagesEl = $('#pdfPages');
-      if (!pagesEl) return;
-
-      for (let pageNum = 1; pageNum <= state.pdfDoc.numPages; pageNum++){
-        const page = await state.pdfDoc.getPage(pageNum);
-        const viewport = page.getViewport({ scale: state.scale });
-
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d', { alpha: false });
-        canvas.width = Math.floor(viewport.width);
-        canvas.height = Math.floor(viewport.height);
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'pdf-page';
-        wrapper.style.width = `${Math.floor(viewport.width)}px`;
-        wrapper.appendChild(canvas);
-        pagesEl.appendChild(wrapper);
-
-        await page.render({ canvasContext: ctx, viewport }).promise;
-      }
-    }catch(err){
-      console.error(err);
-      if (meta) meta.textContent = 'Could not load PDF.';
-      setPdfError('Could not load this PDF. Try “Open”.');
-    }
+    // Best-effort: if the file 404s, the iframe will show an error page; we keep Open button available.
   }
 
   function renderWeb(url, title){
@@ -207,7 +165,7 @@
         dl.setAttribute('download','');
       }
 
-      await renderPdf(tab.file);
+      renderPdf(tab.file);
       return;
     }
 
@@ -244,35 +202,27 @@
     const zoomOut = $('#zoomOut');
     const fit = $('#fitWidth');
 
-    zoomIn?.addEventListener('click', async ()=>{
-      if (!state.pdfDoc) return;
-      state.fitWidth = false;
-      state.scale = Math.min(state.scale + 0.12, 2.75);
-      const tab = (cfg.tabs || []).find(t => t.id === state.activeId);
-      if (tab?.type === 'pdf') await renderPdf(tab.file);
-    });
-
-    zoomOut?.addEventListener('click', async ()=>{
-      if (!state.pdfDoc) return;
-      state.fitWidth = false;
-      state.scale = Math.max(state.scale - 0.12, 0.65);
-      const tab = (cfg.tabs || []).find(t => t.id === state.activeId);
-      if (tab?.type === 'pdf') await renderPdf(tab.file);
-    });
-
-    fit?.addEventListener('click', async ()=>{
+    zoomIn?.addEventListener('click', ()=>{
       const tab = (cfg.tabs || []).find(t => t.id === state.activeId);
       if (tab?.type !== 'pdf') return;
-      state.fitWidth = true;
-      await renderPdf(tab.file);
+      state.fit = false;
+      state.zoomPct = Math.min(state.zoomPct + 10, 200);
+      renderPdf(tab.file);
     });
 
-    window.addEventListener('resize', ()=>{
-      if (!state.fitWidth) return;
+    zoomOut?.addEventListener('click', ()=>{
       const tab = (cfg.tabs || []).find(t => t.id === state.activeId);
       if (tab?.type !== 'pdf') return;
-      clearTimeout(window.__pdfResizeTimer);
-      window.__pdfResizeTimer = setTimeout(()=>renderPdf(tab.file), 150);
+      state.fit = false;
+      state.zoomPct = Math.max(state.zoomPct - 10, 80);
+      renderPdf(tab.file);
+    });
+
+    fit?.addEventListener('click', ()=>{
+      const tab = (cfg.tabs || []).find(t => t.id === state.activeId);
+      if (tab?.type !== 'pdf') return;
+      state.fit = true;
+      renderPdf(tab.file);
     });
   }
 

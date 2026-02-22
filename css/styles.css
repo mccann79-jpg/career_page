@@ -197,6 +197,15 @@ a:hover{text-decoration:underline}
 }
 
 /* PDF viewing area: white, centered pages, taller */
+.pdf-frame{
+  width:100%;
+  height: calc(100vh - 210px);
+  min-height: 640px;
+  border:0;
+  background:#ffffff;
+}
+
+/* (Legacy canvas-based viewer styles retained, unused) */
 .pdf-shell{
   background:#ffffff;
   height: calc(100vh - 210px);

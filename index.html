@@ -80,9 +80,8 @@
           </div>
         </div>
 
-        <div id="pdfShell" class="pdf-shell">
-          <div id="pdfPages" class="pdf-pages"></div>
-        </div>
+        <!-- Native browser PDF viewer (reliable on GitHub Pages + localhost) -->
+        <iframe id="pdfFrame" class="pdf-frame" title="PDF"></iframe>
 
         <div id="pdfError" class="page" style="display:none;"></div>
       </section>
@@ -113,9 +112,6 @@
 
     </div>
   </main>
-
-  <!-- PDF.js (required for local + GitHub Pages) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js" integrity="sha512-QlZV4WAVBq4z3ezY2f+K4Tj+ZcO8Pq4S8vZ0qS6UkgQ2g3n8yQ9+IfQz7m0t5sKc5+g6q+GQ5kEm1hSahh5qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script src="js/site.config.js"></script>
   <script src="js/main.js"></script>
